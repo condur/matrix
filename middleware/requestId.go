@@ -10,15 +10,15 @@ func RequestId() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		// Get the request id from header
-		requestId := c.Request.Header.Get(request.RequestId)
+		id := request.GetReaderId(c)
 
 		// Generate a request id identity if needed
-		if requestId == "" {
-			requestId = request.NewId()
+		if id == "" {
+			id = request.NewId()
 		}
 
 		// Set the request identity in the header
-		c.Writer.Header().Set(request.RequestId, requestId)
+		request.SetId(c, id)
 
 		// Process request
 		c.Next()

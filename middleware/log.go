@@ -16,7 +16,7 @@ const (
 	keyStatus        string = "status"
 	keyUserAgent     string = "user_agent"
 	keyRequestId     string = "req_id"
-	keyForwardedHost string = "forward_host"
+	keyForwardedHost string = "forwarded_host"
 )
 
 // Logger logs context HTTP requests in JSON format, with some additional custom key/values
@@ -35,22 +35,22 @@ func Logger() gin.HandlerFunc {
 		// Get fields to be logged
 		fields := []log.Field{
 			log.String(keyDuration, duration),
-			log.String(keyClientIp, c.ClientIP()),
-			log.String(keyMethod, c.Request.Method),
-			log.String(keyPath, c.Request.URL.RequestURI()),
-			log.Int(keyStatus, c.Writer.Status()),
-			log.String(keyUserAgent, c.Request.UserAgent()),
-			log.String(keyRequestId, c.Writer.Header().Get(request.RequestId)),
+			log.String(keyClientIp, request.IP(c)),
+			log.String(keyMethod, request.Method(c)),
+			log.String(keyPath, request.URI(c)),
+			log.Int(keyStatus, request.Status(c)),
+			log.String(keyUserAgent, request.UserAgent(c)),
+			log.String(keyRequestId, request.GetWriterId(c)),
 		}
 
-		// Log the Forward Host, if present
-		if forwardHost := c.Request.Header.Get("X-Forwarded-Host"); forwardHost != "" {
-			fields = append(fields, log.String(keyForwardedHost, forwardHost))
+		// Log the Forwarded Host, if present
+		if forwardedHost := request.ForwardedHost(c); forwardedHost != "" {
+			fields = append(fields, log.String(keyForwardedHost, forwardedHost))
 		}
 
-		// Log the information
-		if c.Writer.Status() >= 400 {
-			log.Error(c.Errors.String(), fields...)
+		// Log the request status
+		if request.Status(c) >= 400 {
+			log.Error(request.Error(c), fields...)
 		} else {
 			log.Info("ok", fields...)
 		}

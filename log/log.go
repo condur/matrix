@@ -14,7 +14,7 @@ var logger, _ = defaultConfig().Build()
 //
 // Default level value: "info".
 // Accepted values: "panic", "fatal", "error", "warn", "warning", "info", "debug".
-// In case of invalid input value the log level is reset to default value.
+// In case of invalid input value, the log level is reset to default value.
 func Config(app, level string) {
 	// Gen the logger default config
 	config := defaultConfig()

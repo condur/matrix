@@ -25,7 +25,7 @@ func NewServer(port string, handler http.Handler) *http.Server {
 }
 
 func Shutdown(srv *http.Server, timeout time.Duration) {
-	// The context is used to inform the server it has few seconds to finish
+	// The context is used to inform the server it has a few seconds to finish
 	// the requests it is currently handling
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 

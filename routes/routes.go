@@ -42,5 +42,6 @@ func Initialize(opt *Options) *gin.Engine {
 	router.POST("/sum", handlers.Sum)
 	router.POST("/multiply", handlers.Multiply)
 
+	// Return configured router
 	return router
 }
